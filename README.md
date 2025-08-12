@@ -45,6 +45,7 @@ Set-Location $Target
 
 .\Run-BGMer-win.bat --console
 ```
+実行するには数分時間を要する場合があります
 ブラウザが開かない場合は手動で http://127.0.0.1:7860/ を開いてください
 
 ### MacOS（ターミナルにコピーして実行）
@@ -60,6 +61,7 @@ cd BGMer-Project
 chmod +x "Run BGMer(mac).sh"
 ./Run\ BGMer\(mac\).sh
 ```
+実行するには数分時間を要する場合があります
 ブラウザが開かない場合は手動で http://127.0.0.1:7860/ を開いてください
 
 ### 使い方
