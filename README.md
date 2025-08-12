@@ -47,7 +47,7 @@ Set-Location $Target
 ```
 ### ブラウザが開かない場合は手動で http://127.0.0.1:7860/ を開いてください
 
-### MacOS（ターミナルにコピーして実行
+### MacOS（ターミナルにコピーして実行）
 ```set -e
 if ! command -v brew >/dev/null 2>&1; then
   echo "Homebrew が見つかりません。https://brew.sh/ を参照してインストールしてください。"; exit 1
