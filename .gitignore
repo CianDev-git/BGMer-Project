@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+outputs/
+logs/
+.DS_Store
+Thumbs.db
+bin/ffmpeg/
+models/

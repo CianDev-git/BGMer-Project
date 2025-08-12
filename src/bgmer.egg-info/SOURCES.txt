@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+src/text2music.py
+src/video2text.py
+src/bgmer.egg-info/PKG-INFO
+src/bgmer.egg-info/SOURCES.txt
+src/bgmer.egg-info/dependency_links.txt
+src/bgmer.egg-info/entry_points.txt
+src/bgmer.egg-info/requires.txt
+src/bgmer.egg-info/top_level.txt
+tests/test_smoke.py

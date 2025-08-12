@@ -1,0 +1,47 @@
+Metadata-Version: 2.4
+Name: bgmer
+Version: 0.1.0
+Summary: Auto-BGM generator for videos (Gradio UI)
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: gradio<6,>=5.40
+Requires-Dist: transformers<5,>=4.42
+Requires-Dist: torch>=2.2
+Requires-Dist: pillow>=10.3
+Requires-Dist: imageio>=2.34
+Requires-Dist: imageio-ffmpeg>=0.5
+Requires-Dist: scipy>=1.11
+Requires-Dist: tqdm>=4.66
+Requires-Dist: huggingface_hub>=0.23
+Dynamic: license-file
+
+# Video → Text → Music (MVP) — imageio版（moviepy依存なし）
+
+無音動画から短いBGMを自動生成するフルOSSパイプライン。
+- 画像キャプション: **BLIP** (`Salesforce/blip-image-captioning-base` など)
+- 音楽生成: **MusicGen** (`facebook/musicgen-small`)
+- UI: **Gradio**
+- フレーム抽出: **imageio + ffmpeg**（moviepyは使いません）
+
+## セットアップ（Mac想定）
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+# ffmpeg が無ければ: brew install ffmpeg
+python app.py
+```
+
+## 使い方
+1) 短い動画（mp4等）をアップロード  
+2) 自動キャプション → プロンプト生成 → MusicGenで10秒前後のBGM生成  
+3) 生成プロンプトはUIで編集可
+
+## 環境変数（任意）
+- `CAPTION_MODEL` : BLIPモデルID（既定 `Salesforce/blip-image-captioning-base`）
+- `MODEL_ID`      : MusicGenモデルID（既定 `facebook/musicgen-small`）
+- `USE_CPU=1`     : CPUで強制実行
+
+## ライセンス
+MIT（詳細は `LICENSE`）。モデルカードの条件は各モデルのページを確認してください。

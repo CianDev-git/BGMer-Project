@@ -1,0 +1,9 @@
+gradio<6,>=5.40
+transformers<5,>=4.42
+torch>=2.2
+pillow>=10.3
+imageio>=2.34
+imageio-ffmpeg>=0.5
+scipy>=1.11
+tqdm>=4.66
+huggingface_hub>=0.23
