@@ -27,7 +27,7 @@
 １）Git を用意（初回のみ）
   コマンドプロンプトで以下を入力
    ```powershell
-   winget install -e --id Git.Git```
+   winget install -e --id Git.Git'''
 ２）リポジトリ取得
   コマンドプロンプトで以下を入力
   ```git clone https://github.com/CianDev-git/BGMer-Project.git
