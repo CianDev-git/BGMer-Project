@@ -91,7 +91,6 @@ chmod +x "Run BGMer(mac).sh"
 - 実行中の **PowerShell/コマンドプロンプト** で **CTRL+BREAK+C**
 - またはPowerShell/コマンドプロンプトのウィンドウを閉じる（プロセスも終了します）
 - （強制終了が必要なとき）
-- ### PowerShell
   ```Get-NetTCPConnection -LocalPort 7860 -State Listen |
   Select-Object -Expand OwningProcess |
   ForEach-Object { Stop-Process -Id $_ -Force }
