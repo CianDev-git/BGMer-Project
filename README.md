@@ -70,3 +70,7 @@ chmod +x "Run BGMer(mac).sh"
    - **Temperature**：生成のランダムさ（**低い**=安定、**高い**=多彩・予想外）
    - **BGM Gain (dB)**：合成する BGM の音量
 3. **「Run pipeline」** をクリック（実行には3分以上かかる場合があります）
+
+### 終了方法（Mac OS）
+
+1.ターミナルでcontrol + cを入力
