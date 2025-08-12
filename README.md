@@ -71,6 +71,31 @@ chmod +x "Run BGMer(mac).sh"
    - **BGM Gain (dB)**：合成する BGM の音量
 3. **「Run pipeline」** をクリック（実行には3分以上かかる場合があります）
 
-### 終了方法（Mac OS）
+## 終了方法
 
-1.ターミナルでcontrol + cを入力
+> **注意**：ブラウザのタブを閉じてもサーバーは終了しません）。  
+> 無操作が **10分** 続くと自動停止します。
+
+### macOS
+- 実行中の **ターミナル** で **Control + C（⌃C）**
+- またはターミナルウィンドウを閉じる（プロセスも終了します）
+- （強制終了が必要なとき）
+  ```bash
+  # ポート 7860 のプロセスを終了
+  lsof -ti :7860 | xargs kill
+  # 落ちない場合
+  lsof -ti :7860 | xargs kill -9
+  ```
+
+### Windows
+- 実行中の **PowerShell/コマンドプロンプト** で **CTRL+BREAK+C**
+- またはPowerShell/コマンドプロンプトのウィンドウを閉じる（プロセスも終了します）
+- （強制終了が必要なとき）
+- ### PowerShell
+  ```Get-NetTCPConnection -LocalPort 7860 -State Listen |
+  Select-Object -Expand OwningProcess |
+  ForEach-Object { Stop-Process -Id $_ -Force }
+  ```
+  ### コマンドプロンプト
+  ```for /f "tokens=5" %a in ('netstat -ano ^| find ":7860" ^| find "LISTENING"') do taskkill /F /PID %a::contentReference[oaicite:0]{index=0}
+  ```
