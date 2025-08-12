@@ -1,8 +1,25 @@
-import os, sys, time, threading, secrets, webbrowser, socket, inspect
+import os, sys, time, threading, secrets, webbrowser, socket, inspect, shutil
 from pathlib import Path
 import gradio as gr
 
 APP_NAME = "BGMer"
+
+# ===== Idle shutdown (無操作で自動終了) =====
+_LAST_ACTIVITY = time.time()
+
+def _touch_activity():
+    """UI操作や推論実行のたびに呼んで最終操作時刻を更新"""
+    global _LAST_ACTIVITY
+    _LAST_ACTIVITY = time.time()
+    return None
+
+def _idle_watchdog(timeout_sec=600, check_every=15):
+    """timeout_sec 秒間 UI 操作や実行が無ければプロセス終了"""
+    while True:
+        time.sleep(check_every)
+        if time.time() - _LAST_ACTIVITY > timeout_sec:
+            print(f"[BGMer] Idle > {timeout_sec}s. Shutting down.", flush=True)
+            os._exit(0)
 
 # ===== 共通の環境変数 =====
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
@@ -14,11 +31,8 @@ for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
     os.environ.pop(k, None)
 os.environ.setdefault("NO_PROXY", "127.0.0.1,localhost")
 os.environ.setdefault("no_proxy", "127.0.0.1,localhost")
+# Gradio の自動オープンは無効にし、後述のフォールバックで1回だけ開く
 os.environ["GRADIO_LAUNCH_BROWSER"] = "0"
-
-# app.py の import 群の下で追加
-from pathlib import Path
-import shutil
 
 def _prepend_to_path(p: Path):
     os.environ["PATH"] = str(p) + os.pathsep + os.environ.get("PATH", "")
@@ -61,7 +75,6 @@ def _ensure_ffmpeg():
             "Windows: ffmpeg フルビルドを導入して PATH を通すか、プロジェクトの bin\\ffmpeg\\bin に ffmpeg.exe / ffprobe.exe を置いてください。\n"
             "mac: `brew install ffmpeg` で導入するか、プロジェクトの bin に配置してください。"
         )
-
 
 # ======== 互換パッチ（古い gradio_client / schema=bool 対策）========
 def _patch_gradio_schema_parsing():
@@ -156,6 +169,7 @@ with gr.Blocks(css=".big-title{font-size:48px!important;font-weight:800;margin:6
             video_out = gr.Video(label="Video with original+bgm")
 
     def pipeline(video, level, temperature, edit_prompt, bgm_gain_db):
+        _touch_activity()  # 実行開始＝活動
         _ensure_ffmpeg()
         global CAP, GEN
 
@@ -199,7 +213,6 @@ with gr.Blocks(css=".big-title{font-size:48px!important;font-weight:800;margin:6
         )
         sr, audio = GEN.generate(final_prompt, cfg)
 
-        # ★ 順序: (audio, target_seconds, sr)
         audio = fit_audio_exact_seconds(audio, seconds, sr)
 
         wav_path = str(OUTPUT_DIR / "bgm.wav")
@@ -213,6 +226,14 @@ with gr.Blocks(css=".big-title{font-size:48px!important;font-weight:800;margin:6
             # ffmpeg 不在など
             raise gr.Error("ffmpeg が見つかりません。インストールし、PATH を通してください。") from e
         return (sr, audio), out_mp4
+
+    # ===== アクティビティフック（UI操作＝活動）=====
+    demo.load(_touch_activity, inputs=None, outputs=None)        # ページ読み込み
+    video.change(_touch_activity, inputs=None, outputs=None)
+    level.change(_touch_activity, inputs=None, outputs=None)
+    temperature.change(_touch_activity, inputs=None, outputs=None)
+    bgm_gain.change(_touch_activity, inputs=None, outputs=None)
+    edit_prompt.change(_touch_activity, inputs=None, outputs=None)
 
     # Gradio バージョン差分への耐性（古い環境だと concurrency_limit が無い）
     try:
@@ -275,7 +296,7 @@ def _safe_launch(demo: gr.Blocks, host: str, port: int):
     if "show_api" in sig.parameters:
         params["show_api"] = False  # API情報生成を抑止（古い組合せの ISE 対策）
 
-    # ブラウザのフォールバック起動
+    # ブラウザのフォールバック起動（1回だけ）
     threading.Thread(target=_open_browser_when_ready, args=(host, port), daemon=True).start()
 
     # 1st try
@@ -315,6 +336,10 @@ def _safe_launch(demo: gr.Blocks, host: str, port: int):
         raise
 
 def main():
+    # ===== 無操作タイムアウト開始（既定 600 秒 / 環境変数で変更可）=====
+    idle = int(os.environ.get("BGMER_IDLE_TIMEOUT_SEC", "600"))
+    threading.Thread(target=_idle_watchdog, args=(idle, 15), daemon=True).start()
+
     # UIを出してからモデルを温める（体感を軽く）
     threading.Thread(target=_warmup_models, daemon=True).start()
 
