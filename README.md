@@ -96,7 +96,7 @@ chmod +x "Run BGMer(mac).sh"
   Select-Object -Expand OwningProcess |
   ForEach-Object { Stop-Process -Id $_ -Force }
   ```
-  ### コマンドプロンプト
+- ### コマンドプロンプト
   ```
   for /f "tokens=5" %a in ('netstat -ano ^| find ":7860" ^| find "LISTENING"') do taskkill /F /PID %a::contentReference[oaicite:0]{index=0}
   ```
