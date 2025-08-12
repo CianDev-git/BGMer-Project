@@ -7,7 +7,7 @@
 - UI: **Gradio**
 - フレーム抽出: **ffmpeg**
 
-> 動作確認: **Windows 11 / macOS (Apple Silicon)**  
+> 動作確認: **Windows 11 / macOS (Apple Silicon)**
 > 入力は **最大120秒**（マシン性能により処理時間が変動）ですが、 **60秒以内** を推奨します。
 
 ---
@@ -46,6 +46,7 @@ Set-Location $Target
 .\Run-BGMer-win.bat --console
 ```
 > 実行するには数分時間を要する場合があります
+
 > ブラウザが開かない場合は手動で http://127.0.0.1:7860/ を開いてください
 
 ### MacOS（ターミナルにコピーして実行）
@@ -62,6 +63,7 @@ chmod +x "Run BGMer(mac).sh"
 ./Run\ BGMer\(mac\).sh
 ```
 > 実行するには数分時間を要する場合があります。
+
 > ブラウザが開かない場合は手動で http://127.0.0.1:7860/ を開いてください。
 
 ### 使い方
