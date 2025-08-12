@@ -69,5 +69,4 @@ chmod +x "Run BGMer(mac).sh"
    - **Quality / Speed**：処理の重さと品質を調整（**1**=軽い/速い、**5**=重い/高品質）
    - **Temperature**：生成のランダムさ（**低い**=安定、**高い**=多彩・予想外）
    - **BGM Gain (dB)**：合成する BGM の音量
-3. **「Run pipeline」** をクリック
-
+3. **「Run pipeline」** をクリック（実行には3分以上かかる場合があります）
